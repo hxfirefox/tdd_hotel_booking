@@ -18,7 +18,4 @@ public class Hotel {
         return level;
     }
 
-    public Hotel moreAdvanced(Hotel targetHotel) {
-        return this.getLevel() > targetHotel.getLevel() ? this : targetHotel;
-    }
 }
