@@ -1,4 +1,3 @@
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,21 +13,6 @@ public class HotelChoosenTest {
     private List<String> hotels = of(LAKEWOOD, BRIDGEWOOD, RIDGEWOOD);
 
     private static HotelChoosen hotelChoosen;
-    private HotelPay lakewoodHotelPay;
-    private HotelPay bridgewoodHotelPay;
-    private HotelPay ridgewoodHotelPay;
-
-    @Before
-    public void setUp() throws Exception {
-
-
-        lakewoodHotelPay = new HotelPay(new Hotel(LAKEWOOD, 3),
-                new NormalCustomPrice(110, 90), new VipCustomPrice(80, 80));
-        bridgewoodHotelPay = new HotelPay(new Hotel(BRIDGEWOOD, 4),
-                new NormalCustomPrice(160, 60), new VipCustomPrice(110, 50));
-        ridgewoodHotelPay = new HotelPay(new Hotel(RIDGEWOOD, 5),
-                new NormalCustomPrice(220, 150), new VipCustomPrice(100, 40));
-    }
 
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_normal_custom_booking_3_weekday() throws Exception {
@@ -62,8 +46,7 @@ public class HotelChoosenTest {
                         new BookingDate("2014-12-31", "2014-12-31"),
                         new BookingDate("2015-1-3", "2015-1-3")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.NORMAL, of("2014-12-28", "2014-12-31", "2015-1-3"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(4));
         assertThat(hotel.getHotelName(), is(BRIDGEWOOD));
