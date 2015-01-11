@@ -1,6 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+
 import static com.google.common.collect.ImmutableList.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -16,6 +18,7 @@ public class HotelPayTest {
     private HotelPay lakewoodHotelPay;
     private HotelPay bridgewoodHotelPay;
     private HotelPay ridgewoodHotelPay;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Before
     public void setUp() throws Exception {
@@ -31,9 +34,9 @@ public class HotelPayTest {
     public void should_return_normal_weekday_price_when_normal_custom_booking_lakewood_on_weekday() throws Exception {
         // given
         // when
-        final int pay1 = lakewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-1");
-        final int pay2 = bridgewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-1");
-        final int pay3 = ridgewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-1");
+        final int pay1 = lakewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-1"));
+        final int pay2 = bridgewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-1"));
+        final int pay3 = ridgewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-1"));
         // then
         assertThat(pay1, is(110));
         assertThat(pay2, is(160));
@@ -44,9 +47,9 @@ public class HotelPayTest {
     public void should_return_normal_weekend_price_when_normal_custom_booking_lakewood_on_weekend() throws Exception {
         // given
         // when
-        final int pay1 = lakewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-3");
-        final int pay2 = bridgewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-3");
-        final int pay3 = ridgewoodHotelPay.getPay(Identifier.NORMAL, "2015-1-3");
+        final int pay1 = lakewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-3"));
+        final int pay2 = bridgewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-3"));
+        final int pay3 = ridgewoodHotelPay.getPay(CustomType.NORMAL, dateFormat.parse("2015-1-3"));
         // then
         assertThat(pay1, is(90));
         assertThat(pay2, is(60));
@@ -57,9 +60,9 @@ public class HotelPayTest {
     public void should_return_vip_weekday_price_when_vip_custom_booking_lakewood_on_weekday() throws Exception {
         // given
         // when
-        final int pay1 = lakewoodHotelPay.getPay(Identifier.VIP, "2015-1-1");
-        final int pay2 = bridgewoodHotelPay.getPay(Identifier.VIP, "2015-1-1");
-        final int pay3 = ridgewoodHotelPay.getPay(Identifier.VIP, "2015-1-1");
+        final int pay1 = lakewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-1"));
+        final int pay2 = bridgewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-1"));
+        final int pay3 = ridgewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-1"));
         // then
         assertThat(pay1, is(80));
         assertThat(pay2, is(110));
@@ -70,9 +73,9 @@ public class HotelPayTest {
     public void should_return_vip_weekend_price_when_vip_custom_booking_lakewood_on_weekend() throws Exception {
         // given
         // when
-        final int pay1 = lakewoodHotelPay.getPay(Identifier.VIP, "2015-1-3");
-        final int pay2 = bridgewoodHotelPay.getPay(Identifier.VIP, "2015-1-3");
-        final int pay3 = ridgewoodHotelPay.getPay(Identifier.VIP, "2015-1-3");
+        final int pay1 = lakewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-3"));
+        final int pay2 = bridgewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-3"));
+        final int pay3 = ridgewoodHotelPay.getPay(CustomType.VIP, dateFormat.parse("2015-1-3"));
         // then
         assertThat(pay1, is(80));
         assertThat(pay2, is(50));
@@ -83,12 +86,12 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_normal_custom_booking_3_weekday() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
         // then
         assertThat(paySum1, is(330));
         assertThat(paySum2, is(480));
@@ -99,12 +102,12 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_vip_custom_booking_3_weekday() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-30", "2014-12-31", "2015-1-1"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-30", "2015-1-1")));
         // then
         assertThat(paySum1, is(240));
         assertThat(paySum2, is(330));
@@ -115,12 +118,18 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_normal_custom_booking_1_weekday_and_2_weekend() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
         // then
         assertThat(paySum1, is(290));
         assertThat(paySum2, is(280));
@@ -131,12 +140,18 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_vip_custom_booking_1_weekday_and_2_weekend() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-28", "2014-12-31", "2015-1-3"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
         // then
         assertThat(paySum1, is(240));
         assertThat(paySum2, is(210));
@@ -147,12 +162,18 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_normal_custom_booking_2_weekday_and_1_weekend() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.NORMAL,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.NORMAL,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
         // then
         assertThat(paySum1, is(310));
         assertThat(paySum2, is(380));
@@ -163,12 +184,18 @@ public class HotelPayTest {
     public void should_return_sum_pay_when_vip_custom_booking_2_weekday_and_1_weekend() throws Exception {
         // given
         // when
-        final int paySum1 = lakewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
-        final int paySum2 = bridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
-        final int paySum3 = ridgewoodHotelPay.getPaySum(Identifier.VIP,
-                of("2014-12-29", "2014-12-31", "2015-1-3"));
+        final int paySum1 = lakewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum2 = bridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
+        final int paySum3 = ridgewoodHotelPay.getPaySum(CustomType.VIP,
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")));
         // then
         assertThat(paySum1, is(240));
         assertThat(paySum2, is(270));

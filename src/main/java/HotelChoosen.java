@@ -1,4 +1,5 @@
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 
@@ -6,11 +7,62 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Created by 黄翔 on 15-1-1.
  */
 public class HotelChoosen {
+    private final List<BookingDate> bookingDates;
+    private CustomType type;
+
+    public static final String LAKEWOOD = "Lakewood";
+    public static final String BRIDGEWOOD = "Bridgewood";
+    public static final String RIDGEWOOD = "Ridgewood";
+
+    private final HotelPay lakewoodHotelPay = new HotelPay(new Hotel(LAKEWOOD, 3),
+            new NormalCustomPrice(110, 90), new VipCustomPrice(80, 80));
+    private final HotelPay bridgewoodHotelPay = new HotelPay(new Hotel(BRIDGEWOOD, 4),
+            new NormalCustomPrice(160, 60), new VipCustomPrice(110, 50));
+    private final HotelPay ridgewoodHotelPay = new HotelPay(new Hotel(RIDGEWOOD, 5),
+            new NormalCustomPrice(220, 150), new VipCustomPrice(100, 40));
+    private List<HotelPay> hotelPays = Lists.newArrayList();
+
+    public HotelChoosen(String customType, List<BookingDate> dates, List<String> hotels) {
+        bookingDates = dates;
+        type = customType.equals("vip") ? CustomType.VIP : CustomType.NORMAL;
+        InitHotelPay(hotels);
+    }
+
+    private void InitHotelPay(List<String> hotels) {
+        for (String hotel : hotels) {
+            if (hotel.equals(LAKEWOOD))
+                hotelPays.add(lakewoodHotelPay);
+            else if (hotel.equals(BRIDGEWOOD))
+                hotelPays.add(bridgewoodHotelPay);
+            else if (hotel.equals(RIDGEWOOD))
+                hotelPays.add(ridgewoodHotelPay);
+        }
+    }
+
+    public Hotel chooseHotel() {
+        List<Map.Entry<HotelPay, Integer>> sortedSet =
+                sortHotelPayByPriceThenStar(getHotelPaySumHashMap());
+
+        printSortedSet(sortedSet);
+
+        return sortedSet.iterator().next().getKey().getHotel();
+    }
+
+    private Map<HotelPay, Integer> getHotelPaySumHashMap() {
+        Map<HotelPay, Integer> sums = Maps.newHashMap();
+        for (HotelPay hotelPay : hotelPays) {
+            sums.put(hotelPay, hotelPay.getPaySum(type, bookingDates));
+        }
+        return sums;
+    }
+
     public Hotel chooseHotel(List<HotelPay> hotelPays, Identifier identifier, List<String> dates) throws ParseException {
+        this.hotelPays = hotelPays;
 
         List<Map.Entry<HotelPay, Integer>> sortedSet =
                 sortHotelPayByPriceThenStar(getHotelPaySumHashMap(hotelPays, identifier, dates));
@@ -25,7 +77,7 @@ public class HotelChoosen {
             List<String> dates) throws ParseException {
         Map<HotelPay, Integer> sums = Maps.newHashMap();
         for (HotelPay hotelPay : hotelPays) {
-            sums.put(hotelPay, hotelPay.getPaySum(identifier, dates));
+            sums.put(hotelPay, hotelPay.getPaySum(type, bookingDates));
         }
         return sums;
     }

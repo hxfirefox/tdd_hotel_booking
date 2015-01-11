@@ -1,10 +1,9 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_WEEK;
 
 /**
  * Created by 黄翔 on 15-1-1.
@@ -22,51 +21,54 @@ public class HotelPay {
         this.vipCustomPrice = vipCustomPrice;
     }
 
-    public int getPay(Identifier identifier, String date) throws ParseException {
-        return isWeekDay(date) ? getWeekdayPay(identifier) : getWeekendPay(identifier);
-    }
-
-    private int getWeekendPay(Identifier identifier) {
-        return isVip(identifier) ? vipCustomPrice.getWeekendPrice()
+    private int getWeekendPay(CustomType type) {
+        return isVip(type) ? vipCustomPrice.getWeekendPrice()
                 : normalCustomPrice.getWeekendPrice();
     }
 
-    private int getWeekdayPay(Identifier identifier) {
-        return isVip(identifier) ? vipCustomPrice.getWeekdayPrice()
+    private int getWeekdayPay(CustomType type) {
+        return isVip(type) ? vipCustomPrice.getWeekdayPrice()
                 : normalCustomPrice.getWeekdayPrice();
     }
 
-    private boolean isVip(Identifier identifier) {
-        return identifier == Identifier.VIP;
-    }
-
-    private boolean isWeekDay(String dateStr) throws ParseException {
-        final int dayOfWeek = getDayOfWeek(dateStr);
-        return isDayOfWeekend(dayOfWeek);
+    private boolean isVip(CustomType type) {
+        return type == CustomType.VIP;
     }
 
     private boolean isDayOfWeekend(int dayOfWeek) {
         return dayOfWeek != 7 && dayOfWeek != 1;
     }
 
-    private int getDayOfWeek(String dateStr) throws ParseException {
-        return transDateToCalendar(dateStr).get(DAY_OF_WEEK);
+    public Hotel getHotel() {
+        return hotel;
     }
 
-    private Calendar transDateToCalendar(String dateStr) throws ParseException {
-        final Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new SimpleDateFormat(DATE_FORMAT).parse(dateStr));
-        return calendar;
-    }
-
-    public int getPaySum(Identifier identifier, List<String> dateList) throws ParseException {
+    public Integer getPaySum(CustomType type, List<BookingDate> bookingDates) {
         int sum = 0;
-        for (String date : dateList)
-            sum += getPay(identifier, date);
+        for (BookingDate booking : bookingDates) {
+            for (Date date : booking.getDateInterval()) {
+                sum += getPay(type, date);
+            }
+        }
         return sum;
     }
 
-    public Hotel getHotel() {
-        return hotel;
+    public int getPay(CustomType type, Date date) {
+        return isWeekDay(date) ? getWeekdayPay(type) : getWeekendPay(type);
+    }
+
+    private boolean isWeekDay(Date date) {
+        final int dayOfWeek = getDayOfWeek(date);
+        return isDayOfWeekend(dayOfWeek);
+    }
+
+    private int getDayOfWeek(Date date) {
+        return transDateToCalendar(date).get(DAY_OF_WEEK);
+    }
+
+    private Calendar transDateToCalendar(Date date) {
+        final Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        return calendar;
     }
 }

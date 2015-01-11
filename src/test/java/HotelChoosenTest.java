@@ -1,6 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.google.common.collect.ImmutableList.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -9,6 +11,7 @@ public class HotelChoosenTest {
     public static final String LAKEWOOD = "Lakewood";
     public static final String BRIDGEWOOD = "Bridgewood";
     public static final String RIDGEWOOD = "Ridgewood";
+    private List<String> hotels = of(LAKEWOOD, BRIDGEWOOD, RIDGEWOOD);
 
     private static HotelChoosen hotelChoosen;
     private HotelPay lakewoodHotelPay;
@@ -17,7 +20,8 @@ public class HotelChoosenTest {
 
     @Before
     public void setUp() throws Exception {
-        hotelChoosen = new HotelChoosen();
+
+
         lakewoodHotelPay = new HotelPay(new Hotel(LAKEWOOD, 3),
                 new NormalCustomPrice(110, 90), new VipCustomPrice(80, 80));
         bridgewoodHotelPay = new HotelPay(new Hotel(BRIDGEWOOD, 4),
@@ -29,9 +33,10 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_normal_custom_booking_3_weekday() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("normal",
+                of(new BookingDate("2014-12-30", "2015-1-1")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.NORMAL, of("2014-12-30", "2014-12-31", "2015-1-1"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(3));
         assertThat(hotel.getHotelName(), is(LAKEWOOD));
@@ -40,9 +45,10 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_vip_custom_booking_3_weekday() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("vip",
+                of(new BookingDate("2014-12-30", "2015-1-1")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.VIP, of("2014-12-30", "2014-12-31", "2015-1-1"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(3));
         assertThat(hotel.getHotelName(), is(LAKEWOOD));
@@ -51,6 +57,10 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_normal_custom_booking_1_weekday_and_2_weekend() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("normal",
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")), hotels);
         // when
         final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
                 Identifier.NORMAL, of("2014-12-28", "2014-12-31", "2015-1-3"));
@@ -62,9 +72,12 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_vip_custom_booking_1_weekday_and_2_weekend() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("vip",
+                of(new BookingDate("2014-12-28", "2014-12-28"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.VIP, of("2014-12-28", "2014-12-31", "2015-1-3"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(5));
         assertThat(hotel.getHotelName(), is(RIDGEWOOD));
@@ -73,9 +86,12 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_normal_custom_booking_2_weekday_and_1_weekend() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("normal",
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.NORMAL, of("2014-12-29", "2014-12-31", "2015-1-3"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(3));
         assertThat(hotel.getHotelName(), is(LAKEWOOD));
@@ -84,9 +100,12 @@ public class HotelChoosenTest {
     @Test
     public void should_choose_the_cheapest_but_the_most_advanced_hotel_when_vip_custom_booking_2_weekday_and_1_weekend() throws Exception {
         // given
+        hotelChoosen = new HotelChoosen("vip",
+                of(new BookingDate("2014-12-29", "2014-12-29"),
+                        new BookingDate("2014-12-31", "2014-12-31"),
+                        new BookingDate("2015-1-3", "2015-1-3")), hotels);
         // when
-        final Hotel hotel = hotelChoosen.chooseHotel(of(lakewoodHotelPay, bridgewoodHotelPay, ridgewoodHotelPay),
-                Identifier.VIP, of("2014-12-29", "2014-12-31", "2015-1-3"));
+        final Hotel hotel = hotelChoosen.chooseHotel();
         // then
         assertThat(hotel.getLevel(), is(5));
         assertThat(hotel.getHotelName(), is(RIDGEWOOD));
