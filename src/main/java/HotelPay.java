@@ -9,7 +9,6 @@ import static java.util.Calendar.DAY_OF_WEEK;
  * Created by 黄翔 on 15-1-1.
  */
 public class HotelPay {
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private final Hotel hotel;
     private final NormalCustomPrice normalCustomPrice;

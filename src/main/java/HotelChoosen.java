@@ -3,7 +3,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,27 +53,6 @@ public class HotelChoosen {
     }
 
     private Map<HotelPay, Integer> getHotelPaySumHashMap() {
-        Map<HotelPay, Integer> sums = Maps.newHashMap();
-        for (HotelPay hotelPay : hotelPays) {
-            sums.put(hotelPay, hotelPay.getPaySum(type, bookingDates));
-        }
-        return sums;
-    }
-
-    public Hotel chooseHotel(List<HotelPay> hotelPays, Identifier identifier, List<String> dates) throws ParseException {
-        this.hotelPays = hotelPays;
-
-        List<Map.Entry<HotelPay, Integer>> sortedSet =
-                sortHotelPayByPriceThenStar(getHotelPaySumHashMap(hotelPays, identifier, dates));
-
-        printSortedSet(sortedSet);
-
-        return sortedSet.iterator().next().getKey().getHotel();
-    }
-
-    private Map<HotelPay, Integer> getHotelPaySumHashMap(
-            List<HotelPay> hotelPays, Identifier identifier,
-            List<String> dates) throws ParseException {
         Map<HotelPay, Integer> sums = Maps.newHashMap();
         for (HotelPay hotelPay : hotelPays) {
             sums.put(hotelPay, hotelPay.getPaySum(type, bookingDates));
