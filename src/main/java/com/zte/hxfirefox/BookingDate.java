@@ -1,11 +1,14 @@
+package com.zte.hxfirefox;
+
 import com.google.common.collect.Lists;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import static java.util.Calendar.DATE;
 
 /**
  * Created by 黄翔 on 15-1-11.
@@ -47,7 +50,7 @@ public class BookingDate {
 
         for (int day = 0; day < daysInterval; day++) {
             calendar.setTime(checkinDate);
-            calendar.add(Calendar.DATE, day);
+            calendar.add(DATE, day);
             dates.add(calendar.getTime());
         }
 

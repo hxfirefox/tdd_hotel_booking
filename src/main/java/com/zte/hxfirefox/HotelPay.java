@@ -1,8 +1,10 @@
+package com.zte.hxfirefox;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static com.zte.hxfirefox.CustomType.*;
 import static java.util.Calendar.DAY_OF_WEEK;
 
 /**
@@ -31,7 +33,7 @@ public class HotelPay {
     }
 
     private boolean isVip(CustomType type) {
-        return type == CustomType.VIP;
+        return type == VIP;
     }
 
     private boolean isDayOfWeekend(int dayOfWeek) {

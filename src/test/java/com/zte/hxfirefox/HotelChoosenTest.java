@@ -1,3 +1,5 @@
+package com.zte.hxfirefox;
+
 import org.junit.Test;
 
 import java.util.List;
